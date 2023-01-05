@@ -58,4 +58,33 @@ describe("Tic Tac Toe App", () => {
 			expect(playerTurn.textContent).toBe("Player O's turn");
 		});
 	});
+
+	describe("game status", () => {
+		test("players can not play in a position that has been already played", () => {
+			render(<App />);
+
+			const gameStatus = screen.getByRole("status");
+			const gameTiles = screen.getAllByRole("cell");
+
+			fireEvent.click(gameTiles[0]);
+			fireEvent.click(gameTiles[0]);
+
+			expect(gameStatus.textContent).toBe("Position already played");
+		});
+
+		test("Player X wins on top Row", () => {
+			render(<App />);
+
+			const gameStatus = screen.getByRole("status");
+			const gameTiles = screen.getAllByRole("cell");
+
+			fireEvent.click(gameTiles[1]);
+			fireEvent.click(gameTiles[0]);
+			fireEvent.click(gameTiles[2]);
+			fireEvent.click(gameTiles[3]);
+			fireEvent.click(gameTiles[4]);
+
+			expect(gameStatus.textContent).toBe("Player X wins");
+		});
+	});
 });

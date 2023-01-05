@@ -33,6 +33,9 @@ export function Tile({ x, y, onTileClickedCallBack: onClick }: TileProperties) {
 		});
 	};
 
+	// eslint-disable-next-line no-console
+	// console.log(`X=${x} Y=${y} Player=${player}`);
+
 	return (
 		<div className={styles.tile} role="cell" onClick={handleClick}>
 			{player}

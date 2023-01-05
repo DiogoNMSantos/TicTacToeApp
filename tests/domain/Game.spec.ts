@@ -26,4 +26,24 @@ describe("Tic tac toe game", () => {
 
 		expect(game.nextPlayer).toBe("O");
 	});
+
+	test("Should not allow to play on a played position", () => {
+		const game = new Game();
+
+		game.play(0, 0);
+
+		expect(() => game.play(0, 0)).toThrow(new Error("Position already played"));
+	});
+
+	test("Should display player X has won on top row", () => {
+		const game = new Game();
+
+		game.play(0, 0);
+		game.play(2, 2);
+		game.play(0, 1);
+		game.play(1, 1);
+		game.play(0, 2);
+
+		expect(game.winner()).toBe("X");
+	});
 });

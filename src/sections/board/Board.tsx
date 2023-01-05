@@ -5,14 +5,25 @@ import { ClickEvent, Tile } from "./tile/Tile";
 export interface BoardProps {
 	game: Game;
 	playedCallBack: () => void;
+	invalidPlayCallBack: (message: string) => void;
+	winnerCallBack: (winner: string) => void;
 }
 
-const Board: React.FC<BoardProps> = ({ game, playedCallBack }: BoardProps) => {
+const Board: React.FC<BoardProps> = ({
+	game,
+	playedCallBack,
+	invalidPlayCallBack,
+	winnerCallBack,
+}: BoardProps) => {
 	const playedCallBackHandle = (clickEvent: ClickEvent) => {
-		clickEvent.updatePlayerOnTileCallBack(
-			game.play(clickEvent.coordinate.x, clickEvent.coordinate.y)
-		);
-		playedCallBack();
+		try {
+			const player = game.play(clickEvent.coordinate.x, clickEvent.coordinate.y);
+			clickEvent.updatePlayerOnTileCallBack(player);
+			playedCallBack();
+			winnerCallBack(player);
+		} catch (error) {
+			invalidPlayCallBack((error as Error).message);
+		}
 	};
 
 	return (
