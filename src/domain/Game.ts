@@ -7,6 +7,7 @@ export class Game {
 
 	winner(): string {
 		const topRow = this.plays.filter((p) => p.coordinate.x === 0);
+
 		if (topRow.length === 3 && topRow.every((p) => p.player === topRow[0].player)) {
 			return topRow[0].player;
 		}
@@ -15,6 +16,10 @@ export class Game {
 	}
 
 	play(xCord: number, yCord: number): string {
+		if (this.winner() !== "") {
+			throw new Error("Can not continue to play");
+		}
+
 		if (this.plays.find((value) => value.coordinate.x === xCord && value.coordinate.y === yCord)) {
 			throw new Error("Position already played");
 		}

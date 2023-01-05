@@ -78,13 +78,29 @@ describe("Tic Tac Toe App", () => {
 			const gameStatus = screen.getByRole("status");
 			const gameTiles = screen.getAllByRole("cell");
 
-			fireEvent.click(gameTiles[1]);
 			fireEvent.click(gameTiles[0]);
-			fireEvent.click(gameTiles[2]);
+			fireEvent.click(gameTiles[5]);
+			fireEvent.click(gameTiles[1]);
 			fireEvent.click(gameTiles[3]);
-			fireEvent.click(gameTiles[4]);
+			fireEvent.click(gameTiles[2]);
 
 			expect(gameStatus.textContent).toBe("Player X wins");
+		});
+
+		test("When game is finished no other players can continue to play", () => {
+			render(<App />);
+
+			const gameStatus = screen.getByRole("status");
+			const gameTiles = screen.getAllByRole("cell");
+
+			fireEvent.click(gameTiles[0]);
+			fireEvent.click(gameTiles[5]);
+			fireEvent.click(gameTiles[1]);
+			fireEvent.click(gameTiles[3]);
+			fireEvent.click(gameTiles[2]);
+			fireEvent.click(gameTiles[7]);
+
+			expect(gameStatus.textContent).toBe("Can not continue to play");
 		});
 	});
 });

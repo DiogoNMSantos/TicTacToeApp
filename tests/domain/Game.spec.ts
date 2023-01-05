@@ -46,4 +46,16 @@ describe("Tic tac toe game", () => {
 
 		expect(game.winner()).toBe("X");
 	});
+
+	test("Should not allow player to continue to play after winner has been declared", () => {
+		const game = new Game();
+
+		game.play(0, 0);
+		game.play(2, 2);
+		game.play(0, 1);
+		game.play(1, 1);
+		game.play(0, 2);
+
+		expect(() => game.play(2, 1)).toThrow(new Error("Can not continue to play"));
+	});
 });

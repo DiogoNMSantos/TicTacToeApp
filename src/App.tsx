@@ -16,7 +16,6 @@ export function App() {
 		setStatus(message);
 	};
 
-	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	const wins = (winner: string) => {
 		setStatus(`Player ${winner} wins`);
 	};
