@@ -1,17 +1,28 @@
-import { UserCard } from "./sections/users/UserCard";
-import { useUsers } from "./sections/users/useUsers";
+import { useState } from "react";
+
+import styles from "./App.module.scss";
+import { Game } from "./domain/Game";
+import { Board } from "./sections/board/Board";
 
 export function App() {
-	const users = useUsers();
+	const [ticTacToeGame, _] = useState<Game>(new Game());
+	const [nextPlayer, setNextPlayer] = useState<string>(ticTacToeGame.nextPlayer);
+
+	const played = () => {
+		setNextPlayer(ticTacToeGame.nextPlayer);
+	};
 
 	return (
-		<div className="App">
-			<h3>🌱⚛️ Create React App Codely template example</h3>
-			<h2>Current users</h2>
-
-			{users.map((user) => (
-				<UserCard key={user.name} user={user} />
-			))}
-		</div>
+		<>
+			<section className={styles.title}>
+				<h1>Tic Tac Toe</h1>
+			</section>
+			<section>
+				<h2 className={styles.display} role="textbox">
+					Player <span>{nextPlayer}</span>'s turn
+				</h2>
+			</section>
+			<Board game={ticTacToeGame} playedCallBack={played} />;
+		</>
 	);
 }
