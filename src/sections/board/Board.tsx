@@ -9,12 +9,7 @@ export interface BoardProps {
 	winnerCallBack: (winner: string) => void;
 }
 
-const Board: React.FC<BoardProps> = ({
-	game,
-	playedCallBack,
-	invalidPlayCallBack: errorCallBack,
-	winnerCallBack,
-}: BoardProps) => {
+export function Board({ game, playedCallBack, invalidPlayCallBack, winnerCallBack }: BoardProps) {
 	const playedCallBackHandler = (clickEvent: ClickEvent) => {
 		try {
 			const player = game.play(clickEvent.coordinate.x, clickEvent.coordinate.y);
@@ -23,11 +18,12 @@ const Board: React.FC<BoardProps> = ({
 			playedCallBack();
 
 			const winner = game.winner();
+
 			if (winner !== "") {
 				winnerCallBack(winner);
 			}
 		} catch (error) {
-			errorCallBack((error as Error).message);
+			invalidPlayCallBack((error as Error).message);
 		}
 	};
 
@@ -36,23 +32,20 @@ const Board: React.FC<BoardProps> = ({
 			<section className={styles.container}>
 				<div role="row" className={styles.row}>
 					<Tile x={0} y={0} onTileClickedCallBack={playedCallBackHandler} />
-					<Tile x={0} y={1} onTileClickedCallBack={playedCallBackHandler} />
-					<Tile x={0} y={2} onTileClickedCallBack={playedCallBackHandler} />
-				</div>
-				<div role="row" className={styles.row}>
 					<Tile x={1} y={0} onTileClickedCallBack={playedCallBackHandler} />
-					<Tile x={1} y={1} onTileClickedCallBack={playedCallBackHandler} />
-					<Tile x={1} y={2} onTileClickedCallBack={playedCallBackHandler} />
-				</div>
-
-				<div role="row" className={styles.row}>
 					<Tile x={2} y={0} onTileClickedCallBack={playedCallBackHandler} />
+				</div>
+				<div role="row" className={styles.row}>
+					<Tile x={0} y={1} onTileClickedCallBack={playedCallBackHandler} />
+					<Tile x={1} y={1} onTileClickedCallBack={playedCallBackHandler} />
 					<Tile x={2} y={1} onTileClickedCallBack={playedCallBackHandler} />
+				</div>
+				<div role="row" className={styles.row}>
+					<Tile x={0} y={2} onTileClickedCallBack={playedCallBackHandler} />
+					<Tile x={1} y={2} onTileClickedCallBack={playedCallBackHandler} />
 					<Tile x={2} y={2} onTileClickedCallBack={playedCallBackHandler} />
 				</div>
 			</section>
 		</>
 	);
-};
-
-export { Board };
+}

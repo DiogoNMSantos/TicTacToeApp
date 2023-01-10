@@ -6,12 +6,13 @@ import { Board } from "./sections/board/Board";
 
 export function App() {
 	const [ticTacToeGame, _] = useState<Game>(new Game());
-	const [nextPlayer, setNextPlayer] = useState<string>(ticTacToeGame.nextPlayer);
+	const [nextPLayer, setNextPlayer] = useState<string>(ticTacToeGame.nextPlayer);
 	const [status, setStatus] = useState<string>("");
 
 	const played = () => {
 		setNextPlayer(ticTacToeGame.nextPlayer);
 	};
+
 	const playedError = (message: string) => {
 		setStatus(message);
 	};
@@ -23,20 +24,20 @@ export function App() {
 	return (
 		<>
 			<section className={styles.title}>
-				<h1>Tic Tac Toe</h1>
+				<h1>Tic Tac Toe Diogo</h1>
 			</section>
-			<section>
-				<h2 className={styles.display} role="textbox">
-					Player <span>{nextPlayer}</span>'s turn
-				</h2>
+
+			<section className={styles.display} role="textbox">
+				Player <span>{nextPLayer}</span>'s turn
 			</section>
+
 			<Board
 				game={ticTacToeGame}
 				playedCallBack={played}
 				invalidPlayCallBack={playedError}
 				winnerCallBack={wins}
 			/>
-			;
+
 			<section>
 				<h3 className={styles.display} role="status">
 					{status}

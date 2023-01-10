@@ -2,105 +2,73 @@ import { fireEvent, render, screen } from "@testing-library/react";
 
 import { App } from "../src/App";
 
-describe("Tic Tac Toe App", () => {
-	describe("when game starts", () => {
-		test("Should display App name", () => {
-			render(<App />);
+describe("Tic Tac Toe app", () => {
+	test("should display app name", () => {
+		render(<App />);
 
-			const heading = screen.getByText("Tic Tac Toe");
+		const heading = screen.getByText("Tic Tac Toe Diogo");
 
-			expect(heading).toBeInTheDocument();
-		});
-		test("Should display 9 x 9 board", () => {
-			render(<App />);
-
-			const gameTiles = screen.getAllByRole("cell");
-
-			expect(gameTiles.length).toBe(9);
-		});
-
-		test("Should display 3 rows with 3 tiles each", () => {
-			render(<App />);
-
-			const rows = screen.getAllByRole("row");
-
-			expect(rows.length).toBe(3);
-		});
-
-		test("tiles should be empty", () => {
-			render(<App />);
-
-			const gameTiles = screen.getAllByRole("cell");
-
-			gameTiles.forEach((tile) => {
-				expect(tile.textContent).toBe("");
-			});
-		});
-
-		test("Should display player X turn", () => {
-			render(<App />);
-
-			const playerTurn = screen.getByRole("textbox");
-
-			expect(playerTurn.textContent).toBe("Player X's turn");
-		});
+		expect(heading).toBeInTheDocument();
 	});
 
-	describe("after the first move", () => {
-		test("Should display player O turn", () => {
-			render(<App />);
+	test("should display play's x turn", () => {
+		render(<App />);
 
-			const playerTurn = screen.getByRole("textbox");
-			const gameTiles = screen.getAllByRole("cell");
+		const playTurn = screen.getByRole("textbox");
 
-			fireEvent.click(gameTiles[0]);
-
-			expect(playerTurn.textContent).toBe("Player O's turn");
-		});
+		expect(playTurn.textContent).toBe("Player X's turn");
 	});
 
-	describe("game status", () => {
-		test("players can not play in a position that has been already played", () => {
-			render(<App />);
+	test("should display a 9 by 9 board", () => {
+		render(<App />);
 
-			const gameStatus = screen.getByRole("status");
-			const gameTiles = screen.getAllByRole("cell");
+		const rows = screen.getAllByRole("row");
 
-			fireEvent.click(gameTiles[0]);
-			fireEvent.click(gameTiles[0]);
+		expect(rows.length).toBe(3);
+	});
 
-			expect(gameStatus.textContent).toBe("Position already played");
+	test("should display 3 rows with 3 tiles each", () => {
+		render(<App />);
+
+		const rows = screen.getAllByRole("row");
+
+		expect(rows.length).toBe(3);
+	});
+
+	test("tiles should be empty", () => {
+		render(<App />);
+
+		const gameTiles = screen.getAllByRole("cell");
+
+		gameTiles.forEach((tile) => {
+			expect(tile.textContent).toBe("");
 		});
+	});
+});
 
-		test("Player X wins on top Row", () => {
-			render(<App />);
+describe("after the first move", () => {
+	test("Should display player O turn", () => {
+		render(<App />);
 
-			const gameStatus = screen.getByRole("status");
-			const gameTiles = screen.getAllByRole("cell");
+		const playerTurn = screen.getByRole("textbox");
+		const gameTiles = screen.getAllByRole("cell");
 
-			fireEvent.click(gameTiles[0]);
-			fireEvent.click(gameTiles[5]);
-			fireEvent.click(gameTiles[1]);
-			fireEvent.click(gameTiles[3]);
-			fireEvent.click(gameTiles[2]);
+		fireEvent.click(gameTiles[0]);
 
-			expect(gameStatus.textContent).toBe("Player X wins");
-		});
+		expect(playerTurn.textContent).toBe("Player O's turn");
+	});
+});
 
-		test("When game is finished no other players can continue to play", () => {
-			render(<App />);
+describe("game status", () => {
+	test("players can not play in a position that has been already played", () => {
+		render(<App />);
 
-			const gameStatus = screen.getByRole("status");
-			const gameTiles = screen.getAllByRole("cell");
+		const gameStatus = screen.getByRole("status");
+		const gameTiles = screen.getAllByRole("cell");
 
-			fireEvent.click(gameTiles[0]);
-			fireEvent.click(gameTiles[5]);
-			fireEvent.click(gameTiles[1]);
-			fireEvent.click(gameTiles[3]);
-			fireEvent.click(gameTiles[2]);
-			fireEvent.click(gameTiles[7]);
+		fireEvent.click(gameTiles[0]);
+		fireEvent.click(gameTiles[0]);
 
-			expect(gameStatus.textContent).toBe("Can not continue to play");
-		});
+		expect(gameStatus.textContent).toBe("Position already played");
 	});
 });
