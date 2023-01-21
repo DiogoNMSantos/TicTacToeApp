@@ -1,5 +1,8 @@
-type Coordinate = { x: number; y: number };
-type Play = { player: string; coordinate: Coordinate };
+export type Player = "X" | "O" | "";
+export type CoordinateNumber = 0 | 1 | 2;
+
+export type Coordinate = { x: CoordinateNumber; y: CoordinateNumber };
+export type Play = { player: string; coordinate: Coordinate };
 
 class Board {
 	private readonly plays: Play[] = [];
@@ -10,17 +13,34 @@ class Board {
 	}
 
 	// Command method
-	addPlay(xCord: number, yCord: number, player: string) {
+	addPlay(xCord: CoordinateNumber, yCord: CoordinateNumber, player: Player) {
 		if (this.plays.find((value) => value.coordinate.x === xCord && value.coordinate.y === yCord)) {
 			throw new Error("Position already played");
 		}
 
 		this.plays.push({ player, coordinate: { x: xCord, y: yCord } });
 	}
+
+	get isEmpty() {
+		return this.plays.length === 0;
+	}
+
+	get NextPlayer() {
+		if (this.plays.length === 0) {
+			return "X";
+		}
+
+		if (this.plays[this.plays.length - 1].player === "X") {
+			return "O";
+		}
+
+		if (this.plays[this.plays.length - 1].player === "O") {
+			return "X";
+		}
+	}
 }
 
 export class Game {
-	private player = "";
 	private readonly board = new Board();
 
 	winner(): string {
@@ -34,24 +54,23 @@ export class Game {
 	}
 
 	// Command method
-	play(xCord: number, yCord: number): string {
+	play(xCord: CoordinateNumber, yCord: CoordinateNumber): string {
 		if (this.winner() !== "") {
 			throw new Error("Can not continue to play");
 		}
 
-		this.player = this.nextPlayer;
+		const player = this.nextPlayer;
+		this.board.addPlay(xCord, yCord, player);
 
-		this.board.addPlay(xCord, yCord, this.player);
+		return player;
+	}
 
-		return this.player;
+	get isFirstMove(): boolean {
+		return this.board.isEmpty;
 	}
 
 	// Query method
-	get nextPlayer(): string {
-		if (this.player === "" || this.player === "O") {
-			return "X";
-		}
-
-		return "O";
+	get nextPlayer(): Player {
+		return this.board.NextPlayer ? this.board.NextPlayer : "";
 	}
 }

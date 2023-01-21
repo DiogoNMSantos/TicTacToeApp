@@ -1,10 +1,15 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 
 import { App } from "../src/App";
+import { TicTacToeGameContextProvider } from "../src/hooks/TicTacToeGameContext";
 
 describe("Tic Tac Toe app", () => {
 	test("should display app name", () => {
-		render(<App />);
+		render(
+			<TicTacToeGameContextProvider>
+				<App />
+			</TicTacToeGameContextProvider>
+		);
 
 		const heading = screen.getByText("Tic Tac Toe Diogo");
 
@@ -12,7 +17,11 @@ describe("Tic Tac Toe app", () => {
 	});
 
 	test("should display play's x turn", () => {
-		render(<App />);
+		render(
+			<TicTacToeGameContextProvider>
+				<App />
+			</TicTacToeGameContextProvider>
+		);
 
 		const playTurn = screen.getByRole("textbox");
 
@@ -20,7 +29,11 @@ describe("Tic Tac Toe app", () => {
 	});
 
 	test("should display a 9 by 9 board", () => {
-		render(<App />);
+		render(
+			<TicTacToeGameContextProvider>
+				<App />
+			</TicTacToeGameContextProvider>
+		);
 
 		const rows = screen.getAllByRole("row");
 
@@ -28,7 +41,11 @@ describe("Tic Tac Toe app", () => {
 	});
 
 	test("should display 3 rows with 3 tiles each", () => {
-		render(<App />);
+		render(
+			<TicTacToeGameContextProvider>
+				<App />
+			</TicTacToeGameContextProvider>
+		);
 
 		const rows = screen.getAllByRole("row");
 
@@ -36,7 +53,11 @@ describe("Tic Tac Toe app", () => {
 	});
 
 	test("tiles should be empty", () => {
-		render(<App />);
+		render(
+			<TicTacToeGameContextProvider>
+				<App />
+			</TicTacToeGameContextProvider>
+		);
 
 		const gameTiles = screen.getAllByRole("cell");
 
@@ -48,7 +69,11 @@ describe("Tic Tac Toe app", () => {
 
 describe("after the first move", () => {
 	test("Should display player O turn", () => {
-		render(<App />);
+		render(
+			<TicTacToeGameContextProvider>
+				<App />
+			</TicTacToeGameContextProvider>
+		);
 
 		const playerTurn = screen.getByRole("textbox");
 		const gameTiles = screen.getAllByRole("cell");
@@ -61,7 +86,11 @@ describe("after the first move", () => {
 
 describe("game status", () => {
 	test("players can not play in a position that has been already played", () => {
-		render(<App />);
+		render(
+			<TicTacToeGameContextProvider>
+				<App />
+			</TicTacToeGameContextProvider>
+		);
 
 		const gameStatus = screen.getByRole("status");
 		const gameTiles = screen.getAllByRole("cell");
@@ -70,5 +99,26 @@ describe("game status", () => {
 		fireEvent.click(gameTiles[0]);
 
 		expect(gameStatus.textContent).toBe("Position already played");
+	});
+});
+
+describe("game winning", () => {
+	test("Should notify when there is a winner", () => {
+		render(
+			<TicTacToeGameContextProvider>
+				<App />
+			</TicTacToeGameContextProvider>
+		);
+
+		const gameStatus = screen.getByRole("status");
+		const gameTiles = screen.getAllByRole("cell");
+
+		fireEvent.click(gameTiles[0]);
+		fireEvent.click(gameTiles[1]);
+		fireEvent.click(gameTiles[3]);
+		fireEvent.click(gameTiles[4]);
+		fireEvent.click(gameTiles[6]);
+
+		expect(gameStatus.textContent).toBe("Player X wins");
 	});
 });

@@ -1,49 +1,49 @@
-import { Game } from "../../domain/Game";
+import { useContext, useEffect } from "react";
+
+import { Player } from "../../domain/Game";
+import { TicTacToeGameContext } from "../../hooks/TicTacToeGameContext";
+import { TicTacToePlayContext } from "../../hooks/TicTacToePlayContextProvider";
 import styles from "./Board.module.scss";
-import { ClickEvent, Tile } from "./tile/Tile";
+import { Tile } from "./tile/Tile";
 
-export interface BoardProps {
-	game: Game;
-	playedCallBack: () => void;
-	invalidPlayCallBack: (message: string) => void;
-	winnerCallBack: (winner: string) => void;
-}
+export function Board() {
+	const { coordinate, setPlayer } = useContext(TicTacToePlayContext);
+	const { game, onPlay, onWin, onError } = useContext(TicTacToeGameContext);
 
-export function Board({ game, playedCallBack, invalidPlayCallBack, winnerCallBack }: BoardProps) {
-	const playedCallBackHandler = (clickEvent: ClickEvent) => {
-		try {
-			const player = game.play(clickEvent.coordinate.x, clickEvent.coordinate.y);
-			clickEvent.updatePlayerOnTileCallBack(player);
+	useEffect(() => {
+		if (coordinate && setPlayer && game && onPlay && onWin && onError) {
+			try {
+				const player = game.play(coordinate.x, coordinate.y);
+				setPlayer(player as Player);
+				onPlay();
 
-			playedCallBack();
-
-			const winner = game.winner();
-
-			if (winner !== "") {
-				winnerCallBack(winner);
+				const winner = game.winner();
+				if (winner !== "") {
+					onWin(winner);
+				}
+			} catch (error) {
+				onError((error as Error).message);
 			}
-		} catch (error) {
-			invalidPlayCallBack((error as Error).message);
 		}
-	};
+	}, [coordinate, game, onError, onPlay, setPlayer, onWin]);
 
 	return (
 		<>
 			<section className={styles.container}>
 				<div role="row" className={styles.row}>
-					<Tile x={0} y={0} onTileClickedCallBack={playedCallBackHandler} />
-					<Tile x={1} y={0} onTileClickedCallBack={playedCallBackHandler} />
-					<Tile x={2} y={0} onTileClickedCallBack={playedCallBackHandler} />
+					<Tile x={0} y={0} />
+					<Tile x={1} y={0} />
+					<Tile x={2} y={0} />
 				</div>
 				<div role="row" className={styles.row}>
-					<Tile x={0} y={1} onTileClickedCallBack={playedCallBackHandler} />
-					<Tile x={1} y={1} onTileClickedCallBack={playedCallBackHandler} />
-					<Tile x={2} y={1} onTileClickedCallBack={playedCallBackHandler} />
+					<Tile x={0} y={1} />
+					<Tile x={1} y={1} />
+					<Tile x={2} y={1} />
 				</div>
 				<div role="row" className={styles.row}>
-					<Tile x={0} y={2} onTileClickedCallBack={playedCallBackHandler} />
-					<Tile x={1} y={2} onTileClickedCallBack={playedCallBackHandler} />
-					<Tile x={2} y={2} onTileClickedCallBack={playedCallBackHandler} />
+					<Tile x={0} y={2} />
+					<Tile x={1} y={2} />
+					<Tile x={2} y={2} />
 				</div>
 			</section>
 		</>

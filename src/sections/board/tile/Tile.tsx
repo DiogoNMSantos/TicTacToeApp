@@ -1,44 +1,33 @@
-import React, { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
+import { CoordinateNumber } from "../../../domain/Game";
+import { TicTacToePlayContext } from "../../../hooks/TicTacToePlayContextProvider";
 import styles from "./Tile.module.scss";
 
-export interface Coordinate {
-	x: number;
-	y: number;
-}
-
-export interface ClickEvent {
-	coordinate: Coordinate;
-	updatePlayerOnTileCallBack: (playerToken: string) => void;
-}
-
 export interface TileProperties {
-	x: number;
-	y: number;
-	onTileClickedCallBack: (clickEvent: ClickEvent) => void;
+	x: CoordinateNumber;
+	y: CoordinateNumber;
 }
 
-export function Tile({ x, y, onTileClickedCallBack: onClick }: TileProperties) {
-	const [tileProperties, _] = useState<TileProperties>({ x, y, onTileClickedCallBack: onClick });
-	const [player, setPlayer] = useState<string>("");
+export function Tile({ x, y }: TileProperties) {
+	const [played, setPlayed] = useState("");
+	const { player, coordinate, setCoordinate } = useContext(TicTacToePlayContext);
 
-	const displayPlayer = (player: string) => {
-		setPlayer(player);
+	const handleClick = () => {
+		if (setCoordinate) {
+			setCoordinate({ x, y });
+		}
 	};
 
-	const handleClick = (_: React.MouseEvent) => {
-		tileProperties.onTileClickedCallBack({
-			coordinate: { x: tileProperties.x, y: tileProperties.y },
-			updatePlayerOnTileCallBack: displayPlayer,
-		});
-	};
-
-	// eslint-disable-next-line no-console
-	// console.log(`X=${x} Y=${y} Player=${player}`);
+	useEffect(() => {
+		if (player && coordinate && coordinate.x === x && coordinate.y === y) {
+			setPlayed(player);
+		}
+	}, [coordinate, player, x, y]);
 
 	return (
 		<div className={styles.tile} role="cell" onClick={handleClick}>
-			{player}
+			{played}
 		</div>
 	);
 }

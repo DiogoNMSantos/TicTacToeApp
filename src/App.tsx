@@ -1,25 +1,12 @@
-import { useState } from "react";
+import { useContext } from "react";
 
 import styles from "./App.module.scss";
-import { Game } from "./domain/Game";
+import { TicTacToeGameContext } from "./hooks/TicTacToeGameContext";
+import { TicTacToePlayContextProvider } from "./hooks/TicTacToePlayContextProvider";
 import { Board } from "./sections/board/Board";
 
 export function App() {
-	const [ticTacToeGame, _] = useState<Game>(new Game());
-	const [nextPLayer, setNextPlayer] = useState<string>(ticTacToeGame.nextPlayer);
-	const [status, setStatus] = useState<string>("");
-
-	const played = () => {
-		setNextPlayer(ticTacToeGame.nextPlayer);
-	};
-
-	const playedError = (message: string) => {
-		setStatus(message);
-	};
-
-	const wins = (winner: string) => {
-		setStatus(`Player ${winner} wins`);
-	};
+	const { status, nextPlayer } = useContext(TicTacToeGameContext);
 
 	return (
 		<>
@@ -28,16 +15,12 @@ export function App() {
 			</section>
 
 			<section className={styles.display} role="textbox">
-				Player <span>{nextPLayer}</span>'s turn
+				Player <span>{nextPlayer}</span>'s turn
 			</section>
 
-			<Board
-				game={ticTacToeGame}
-				playedCallBack={played}
-				invalidPlayCallBack={playedError}
-				winnerCallBack={wins}
-			/>
-
+			<TicTacToePlayContextProvider>
+				<Board />
+			</TicTacToePlayContextProvider>
 			<section>
 				<h3 className={styles.display} role="status">
 					{status}
